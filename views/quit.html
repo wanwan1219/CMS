@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        form{
+            display: none;
+        }
+        .search p{
+            line-height: 15px;
+        }
+    </style>
+<body>
+<p class="p1" style="line-height: 10px;height: 10px"></p>
+<button id="btn">退出</button>
+<button id="btn1">修改密码</button>
+<form action="http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=updatepass" method="post">
+    <p>旧密码：<input type="text" name="oldpassword"/></p>
+    <p>新密码：<input type="text" name="newpassword"/></p>
+    <input type="submit"/>
+</form>
+
+
+</body>
+<script src="jquery-1.8.3.min.js"></script>
+<script>
+    $.ajax({
+        url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=returninfo",
+        type:"post",
+        async:false,
+        data:{}
+    }).done(function(result){
+        var data=JSON.parse(result);
+        var name=data.success.userName;
+        $(".p1").html(name)
+    });
+    $("#btn").click(function(){
+        $.ajax({
+            type:"GET",
+            url:"http://127.0.0.1:3000/Handler/AdminHandler?actions=quit",
+            async:false,
+            data:{}
+        }).done(function(result){
+
+        })
+    });
+    $("#btn1").click(function(){
+        $("form").css({display:"block"})
+    })
+    
+</script>
+</html>

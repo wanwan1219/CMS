@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .search p{
+            line-height: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search">
+        <input type="text" placeholder="请输入你要查询的用户名" class="searchtext">
+        <button class="subname">提交</button>
+        <p></p>
+        <button class="prev">上一页</button>跳转到第<input type="text" class="pageText" value="1">页 共<span class="span"></span>页<button class="subpage">提交</button><button class="next">下一页</button>
+    </div>
+
+</body>
+<script src="jquery-1.8.3.min.js"></script>
+<script>
+    $.ajax({
+            url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=show",
+            type:"GET",
+            async:false,
+            data:{
+                searchText:"",
+                pageStart:""
+            }
+        }).done(function(result){
+            var data=JSON.parse(result)
+            $(".span").html(Math.ceil((data.length+1)/3));
+            ajax();
+        })
+    function ajax(){
+        $.ajax({
+            url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=show",
+            type:"GET",
+            async:false,
+            data:{
+                searchText:$(".searchtext").val(),
+                pageStart:$(".pageText").val()
+            }
+        }).done(function(result){
+            var data=JSON.parse(result);
+            $(".search p").html(result);
+        })
+    }
+    $(".subname").click(function(){
+        ajax()
+    })
+$(".prev").click(function(){
+    $(".pageText").val()=$(".pageText").val()-1
+    $.ajax({
+            url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=show",
+            type:"GET",
+            async:false,
+            data:{
+                searchText:$(".searchtext").val(),
+                pageStart:$(".pageText").val()-1
+            }
+        }).done(function(result){
+            var data=JSON.parse(result);
+            $(".search p").html(result);
+        })
+    })
+$(".next").click(function(){
+    $(".pageText").val()=$(".pageText").val()+1
+    $.ajax({
+            url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=show",
+            type:"GET",
+            async:false,
+            data:{
+                searchText:$(".searchtext").val(),
+                pageStart:$(".pageText").val()+1
+            }
+        }).done(function(result){
+            var data=JSON.parse(result);
+            $(".search p").html(result);
+        })
+    })
+</script>
+</html>

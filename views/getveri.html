@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #box{
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+        #box1{
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border: 1px solid #ccc;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="box1"></div><button id="btn1">点击获取验证码</button>
+    <p>请输入验证码：<input type="text" id="veri" name="veri"/></p>
+    <p>用户名：<input type="text" id="userName" name="userName"/></p>
+    <p>密码：<input type="text" id="password" name="password"/></p>
+    <p id="p1" style="line-height: 15px;color: red;height: 15px"></p>
+    <button id="btn2">提交</button>
+</div>
+<!--<button id="btn">获取</button>
+<div id="box"></div>-->
+<br/>
+<br/>
+<br/>
+<p>添加</p>
+<form action="http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=add" method="post">
+    <p>用户名：<input type="text" name="userName"/></p>
+    <p>密码：<input type="text" name="password"/></p>
+    <p>电话：<input type="text" name="phone"/></p>
+    <p>姓名：<input type="text" name="truename"/></p>
+    <input type="submit"/>
+</form>
+<br/>
+<br/>
+<br/>
+<p>登陆</p>
+<form action="http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=login" method="post">
+    <p>用户名：<input type="text" name="userName"/></p>
+    <p>密码：<input type="text" name="password"/></p>
+    <input type="submit"/>
+</form>
+<script src="jquery-1.8.3.min.js"></script>
+<script>
+    /*$("#btn").click(function(){
+        $.ajax({
+            url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=veri",
+            type:"get",
+            async:false,
+            data:{
+
+            }
+        }).done(function(result){
+            var data=JSON.parse(result);
+            $("#box").text(data.data);
+        })
+    });*/
+
+//点击获取验证码
+    $("#btn1").click(function(){
+        $.ajax({
+            url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=veri",
+            type:"get",
+            async:false,
+            data:{
+
+            }
+        }).done(function(result){
+            var data=JSON.parse(result);
+            $("#box1").text(data.data);
+        })
+    });
+
+//输入验证码 验证成功之后在验证用户名密码
+    $("#btn2").click(function(){
+        var veri=$("#veri").val();
+        var userName=$("#userName").val();
+        var password=$("#password").val();
+        $.ajax({
+            url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=checkveri",
+            type:"get",
+            async:false,
+            data:{
+                "veri":veri
+            }
+        }).done(function(result){
+            var data=JSON.parse(result);
+            if(data.success){
+                $.ajax({
+                 url:"http://127.0.0.1:3000/Handler/AdminLoginRegHandler?actions=login",
+                 type:"post",
+                 async:false,
+                 data:{
+                 "userName":userName,
+                 "password":password
+                 }
+                 }).done(function(result){
+                    var data2=JSON.parse(result);
+                    console.log(data2);
+                    if(data2.success){
+                        $("#p1").html("登录成功");
+                        window.open("quit.html","_self");
+                    }else if(data2.default){
+                        $("#p1").html("密码错误")
+                    }else{
+                        $("#p1").html("无此用户")
+                    }
+                })
+            }else{
+                $("#p1").html("验证码输入错误");
+            }
+
+        })
+    })
+</script>
+</body>
+</html>
